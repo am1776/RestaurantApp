@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">TakeHome</string>
+    <string name="default_toolbar_title">DoorDash</string>
+    <string name="toolbar_title_blank"></string>
+    <string name="restaurant_listener_error_msg"> must implement OnRestaurantSelectedListener</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

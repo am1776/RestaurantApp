@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/parentView"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:layout_height="70dp"
+        android:layout_width="120dp"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        tools:src="@drawable/a_good_morning_cafe"
+        android:id="@+id/restaurantIv"/>
+
+    <ImageButton
+        android:id="@+id/favorite_button"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/star"
+        android:layout_alignParentRight="true"
+        android:background="#00ffffff" />
+
+    <TextView
+        android:layout_below="@id/favorite_button"
+        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        tools:text="22 mins"
+        android:textSize="10sp"
+        android:gravity="center"
+        android:layout_alignLeft="@id/favorite_button"
+        android:layout_marginRight="10dp"
+        android:textColor="@android:color/black"
+        android:id="@+id/restaurantStatusTv"/>
+
+    <TextView
+        android:layout_toRightOf="@id/restaurantIv"
+        android:layout_toLeftOf="@id/favorite_button"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        tools:text="Tsing Tao"
+        android:textSize="15sp"
+        android:textColor="@android:color/black"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:id="@+id/restaurantNameTv"/>
+
+    <TextView
+        android:layout_toRightOf="@id/restaurantIv"
+        android:layout_below="@id/restaurantNameTv"
+        android:layout_toLeftOf="@id/favorite_button"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="13sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/profileTextsubTitle"
+        tools:text="Chinese soup"
+        android:id="@+id/restaurantTypeTv"/>
+
+    <View
+        android:layout_below="@id/restaurantIv"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="12dp"
+        android:background="#dfdfdf" />
+</RelativeLayout>
