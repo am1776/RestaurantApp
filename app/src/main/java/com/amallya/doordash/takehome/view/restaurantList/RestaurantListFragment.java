@@ -6,13 +6,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.amallya.doordash.takehome.R;
-import com.amallya.doordash.takehome.data.repository.RestaurantRepository;
 import com.amallya.doordash.takehome.model.Restaurant;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,18 +37,22 @@ public class RestaurantListFragment extends Fragment implements RestaurantListCo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("T", "Fragment on create");
         restaurantListPresenter = new RestaurantListPresenter(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.i("T", "Fragment on create view");
         return inflater.inflate(R.layout.fragment_restaurant_list, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
+        Log.i("T", "Fragment on view created");
         ButterKnife.bind(this, view);
         mListener.onStartFragment();
         setupUi();
@@ -82,6 +86,7 @@ public class RestaurantListFragment extends Fragment implements RestaurantListCo
 
     @Override
     public void updateData(List<Restaurant> list){
+        Log.i("T", "fragment data update");
         progressBar.setVisibility(View.INVISIBLE);
         ((RestaurantListAdapter) restaurantRv.getAdapter()).replaceDataSet(list);
     }

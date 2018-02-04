@@ -23,6 +23,7 @@ public class ServiceApi {
         }
         return instance;
     }
+
     private ServiceApi() {
         buildRetrofit();
     }

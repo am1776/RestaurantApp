@@ -1,6 +1,7 @@
 package com.amallya.doordash.takehome.view.restaurantList;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.amallya.doordash.takehome.data.repository.RestaurantRepository;
 import com.amallya.doordash.takehome.data.repository.impl.RestaurantRepositoryImpl;
@@ -25,8 +26,6 @@ public class RestaurantListPresenter implements RestaurantListContract.Presenter
     @Override
     public void setView(RestaurantListContract.View view) {
         this.view = view;
-        //loadData();
-
         if(restaurantList == null){
             loadData();
         } else{
@@ -34,14 +33,21 @@ public class RestaurantListPresenter implements RestaurantListContract.Presenter
         }
     }
 
+    /*
+    If the list is null, fetch data from the DB.
+    If the DB does not contain data make a network call to fetch the data.
+    */
+
     @Override
     public void loadData() {
         if (view != null) {
+            Log.i("F","Load Data called");
             restaurantRepository.getRestaurantList().subscribe(
                     restaurantLists -> {
                         restaurantList = restaurantLists;
                         if (isRestaurantListEmpty()) {
                             restaurantRepository.getRestaurantListNetwork().subscribe(restaurants -> {
+                                Log.i("F","Data recieved");
                                 restaurantList = restaurants;
                                 refreshUi();
                                 restaurantRepository.insertRestaurantsToDb(restaurantList);

@@ -3,6 +3,7 @@ package com.amallya.doordash.takehome.view.main;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.TextView;
 import com.amallya.doordash.takehome.R;
 import com.amallya.doordash.takehome.model.Restaurant;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements RestaurantListFra
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("T", "activity on create");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setupToolbar();
