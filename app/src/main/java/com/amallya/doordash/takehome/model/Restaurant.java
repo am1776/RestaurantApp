@@ -123,6 +123,10 @@ public class Restaurant implements Serializable {
 
     }
 
+    public Restaurant(String RestaurantName){
+        this.name = RestaurantName;
+    }
+
     public Boolean getIsFavorited() {
         return isFavorited;
     }

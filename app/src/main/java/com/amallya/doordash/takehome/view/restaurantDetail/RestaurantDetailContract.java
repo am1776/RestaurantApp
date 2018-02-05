@@ -17,11 +17,7 @@ public interface RestaurantDetailContract {
 
     interface Presenter {
 
-        void setView(View view, int id);
-
         void loadData(int id);
-
-        void refreshUi();
 
         void onDestroy();
     }

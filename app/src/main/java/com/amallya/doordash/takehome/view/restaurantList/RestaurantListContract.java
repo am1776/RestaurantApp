@@ -16,13 +16,13 @@ public interface RestaurantListContract {
 
     interface Presenter {
 
-        void setView(View view);
-
         void loadData();
 
         void refreshUi();
 
         void onDestroy();
+
+        void onRestaurantFavorited(Restaurant restaurant);
     }
 
 }

@@ -9,6 +9,9 @@ import com.amallya.doordash.takehome.model.Restaurant;
 
 import java.util.List;
 
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
+
 /**
  * Created by anmallya on 8/26/2017.
  */
@@ -17,17 +20,19 @@ public class RestaurantListPresenter implements RestaurantListContract.Presenter
 
     private RestaurantRepository restaurantRepository;
     private List<Restaurant> restaurantList;
-    RestaurantListContract.View view;
+    private RestaurantListContract.View view;
+    private CompositeSubscription compositeSubscription;
 
-    public RestaurantListPresenter(Context context) {
-        this.restaurantRepository = new RestaurantRepositoryImpl(context);
+    public RestaurantListPresenter(RestaurantRepository restaurantRepository, RestaurantListContract.View view) {
+        this.restaurantRepository = restaurantRepository; //new RestaurantRepositoryImpl(context);
+        compositeSubscription = new CompositeSubscription();
+        this.view = view;
     }
 
     @Override
-    public void setView(RestaurantListContract.View view) {
-        this.view = view;
+    public void loadData() {
         if(restaurantList == null){
-            loadData();
+            loadDataHelper();
         } else{
             refreshUi();
         }
@@ -38,26 +43,27 @@ public class RestaurantListPresenter implements RestaurantListContract.Presenter
     If the DB does not contain data make a network call to fetch the data.
     */
 
-    @Override
-    public void loadData() {
+    public void loadDataHelper() {
         if (view != null) {
             Log.i("F","Load Data called");
-            restaurantRepository.getRestaurantList().subscribe(
+            Subscription subscription = restaurantRepository.getRestaurantList().subscribe(
                     restaurantLists -> {
                         restaurantList = restaurantLists;
                         if (isRestaurantListEmpty()) {
-                            restaurantRepository.getRestaurantListNetwork().subscribe(restaurants -> {
+                            Subscription subscription1 = restaurantRepository.getRestaurantListNetwork().subscribe(restaurants -> {
                                 Log.i("F","Data recieved");
                                 restaurantList = restaurants;
                                 refreshUi();
                                 restaurantRepository.insertRestaurantsToDb(restaurantList);
                             });
+                            compositeSubscription.add(subscription1);
                         }else{
                             refreshUi();
                         }
                     }, throwable -> {
                         throwable.printStackTrace();
                     });
+            compositeSubscription.add(subscription);
         }
     }
 
@@ -65,6 +71,8 @@ public class RestaurantListPresenter implements RestaurantListContract.Presenter
         return restaurantList.size() == 0;
     }
 
+
+    @Override
     public void onRestaurantFavorited(Restaurant restaurant) {
         restaurantRepository.onRestaurantFavorited(restaurant);
     }
@@ -79,6 +87,7 @@ public class RestaurantListPresenter implements RestaurantListContract.Presenter
     @Override
     public void onDestroy() {
         view = null;
+        compositeSubscription.unsubscribe();
     }
 
 }

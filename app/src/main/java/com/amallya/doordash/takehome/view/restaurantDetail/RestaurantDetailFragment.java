@@ -13,10 +13,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.amallya.doordash.takehome.R;
+import com.amallya.doordash.takehome.data.repository.RestaurantDetailRepository;
+import com.amallya.doordash.takehome.data.repository.impl.RestaurantDetailRepositoryImpl;
 import com.amallya.doordash.takehome.data.service.RestaurantService;
 import com.amallya.doordash.takehome.model.Restaurant;
 import com.amallya.doordash.takehome.model.RestaurantDetail;
 import com.amallya.doordash.takehome.view.restaurantList.RestaurantListAdapter;
+import com.amallya.doordash.takehome.view.restaurantList.RestaurantListFragment;
 import com.amallya.doordash.takehome.view.restaurantList.RestaurantListPresenter;
 
 import java.util.List;
@@ -49,7 +52,7 @@ public class RestaurantDetailFragment extends Fragment implements RestaurantDeta
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    private RestaurantDetailPresenter restaurantDetailPresenter;
+    private RestaurantDetailContract.Presenter restaurantDetailPresenter;
 
     public RestaurantDetailFragment() {
     }
@@ -68,15 +71,28 @@ public class RestaurantDetailFragment extends Fragment implements RestaurantDeta
         if (getArguments() != null) {
             restaurantId = getArguments().getInt(RESTAURANT_ID);
         }
-        restaurantDetailPresenter = new RestaurantDetailPresenter();
+        restaurantDetailPresenter = new RestaurantDetailPresenter(new RestaurantDetailRepositoryImpl(), this);
     }
 
+
+    private OnStartListener mListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof RestaurantDetailFragment.OnStartListener) {
+            mListener = (RestaurantDetailFragment.OnStartListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + R.string.restaurant_listener_error_msg);
+        }
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        restaurantDetailPresenter.setView(this, restaurantId);
+        restaurantDetailPresenter.loadData(restaurantId);
         progressBar.setVisibility(View.VISIBLE);
     }
 
@@ -85,6 +101,7 @@ public class RestaurantDetailFragment extends Fragment implements RestaurantDeta
     }
 
     private void updateView(RestaurantDetail restaurantDetail){
+        mListener.onStartDetailFragment(restaurantDetail.getName());
         progressBar.setVisibility(View.INVISIBLE);
         tvPhone.setText(restaurantDetail.getPhoneNumber());
         tvDeliveryFee.setText(convertDeliveryFeeToDollars(restaurantDetail.getDeliveryFee()));
@@ -107,5 +124,9 @@ public class RestaurantDetailFragment extends Fragment implements RestaurantDeta
     private String convertDeliveryFeeToDollars(Integer fee){
         Double dFee = Double.parseDouble(fee+"")/100;
         return "$"+dFee;
+    }
+
+    public interface OnStartListener {
+        void onStartDetailFragment(String restaurant);
     }
 }

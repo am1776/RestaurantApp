@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.amallya.doordash.takehome.R;
+import com.amallya.doordash.takehome.data.repository.RestaurantRepository;
+import com.amallya.doordash.takehome.data.repository.impl.RestaurantRepositoryImpl;
 import com.amallya.doordash.takehome.model.Restaurant;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,7 @@ import butterknife.ButterKnife;
 public class RestaurantListFragment extends Fragment implements RestaurantListContract.View{
 
     private OnRestaurantSelectedListener mListener;
-    private RestaurantListPresenter restaurantListPresenter;
+    private RestaurantListContract.Presenter restaurantListPresenter;
 
     @BindView(R.id.restaurantListRv)
     RecyclerView restaurantRv;
@@ -38,7 +40,7 @@ public class RestaurantListFragment extends Fragment implements RestaurantListCo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i("T", "Fragment on create");
-        restaurantListPresenter = new RestaurantListPresenter(getActivity());
+        restaurantListPresenter = new RestaurantListPresenter(new RestaurantRepositoryImpl(getActivity()), this);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class RestaurantListFragment extends Fragment implements RestaurantListCo
         ButterKnife.bind(this, view);
         mListener.onStartFragment();
         setupUi();
-        restaurantListPresenter.setView(this);
+        restaurantListPresenter.loadData();
     }
 
     @Override
